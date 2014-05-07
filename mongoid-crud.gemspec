@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.version       = File.open(File.join(File.dirname(__FILE__),"VERSION")).read.split("\n")[0].chomp.gsub(' ','')
   spec.authors       = ["Adam Luzsi"]
   spec.email         = ["adamluzsi@gmail.com"]
-  spec.description   = "four method to rule them all! Use crud methods on mongoid classes to do anything. Super easy to use! Work even on deeply embedded models"
+  spec.description   = "four method to rule them all! Use crud methods on mongoid classes to do anything. Super easy to use! Work even on deeply embedded models. Check on GitHub"
   spec.summary       = "CRUD on any mongoid model"
 
   spec.files         = `git ls-files`.split($/)
