@@ -1,4 +1,5 @@
-require_relative "../lib/mongoid-crud"
+require "mongoid-crud"
+
 require_relative "helper/connection"
 require_relative "helper/models"
 
