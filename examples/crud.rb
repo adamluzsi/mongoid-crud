@@ -5,7 +5,7 @@ require_relative "helper/models"
 
 test_a= TestA.__create__( hello: "world" )
 test_b= TestB.__create__( hello: "world", world: "no", parent_id: test_a['_id'] )
-test_C= TestC.__create__( hello: "embeds one", parent_id: test_a['_id'] )
+test_c= TestC.__create__( hello: "embeds one", parent_id: test_a['_id'] )
 
 #> puts into json
 puts TestA._read( _id: test_a['_id'] ).to_json
@@ -25,5 +25,3 @@ puts TestB.__update__ _id: test_b['_id'], hello: "sup!"
 puts TestB.__read__(  _id: test_b['_id'] ).inspect
 puts TestB.__delete__(  _id: test_b['_id'] ).inspect
 puts TestB.__read__(  _id: test_b['_id'] ).inspect
-
-Mongoid.purge!

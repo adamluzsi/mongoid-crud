@@ -30,5 +30,18 @@ class TestC
   include Mongoid::CRUD
 
   embedded_in :TestA.mongoid_name
+  embeds_many :TestD.mongoid_name
 
 end
+
+class TestD
+
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  #> if auto extended the CRUD methods, it require not to include / extend here
+
+  embedded_in :TestC.mongoid_name
+
+end
+
+::Kernel.at_exit {Mongoid.purge!}

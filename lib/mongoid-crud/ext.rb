@@ -15,16 +15,17 @@ module Mongoid
 
         if self.embedded?
 
-          raise(ArgumentError,"for embeded document, you need :#{@@parent_sym}") if query[@@parent_sym].nil?
+          parent_id = query.delete(@@parent_sym) || query.delete(@@parent_sym.to_s)
+          raise(ArgumentError,"for embeded document, you need :#{@@parent_sym}") if parent_id.nil?
           parent_model= self._get_class_path(*classes).pinch.last
 
           case parent_model.relation_connection_type(self).to_s.downcase.split('::').last.to_sym
 
             when :many
-              return self._get_class_path(*classes).pinch.last._find(query.delete(@@parent_sym)).__send__(self.mongoid_name).create!(query)
+              return self._get_class_path(*classes).pinch.last._find(parent_id).__send__(self.mongoid_name).create!(query)
 
             when :one
-              return self._get_class_path(*classes).pinch.last._find(query.delete(@@parent_sym)).__send__("create_#{self.mongoid_name}",query)
+              return self._get_class_path(*classes).pinch.last._find(parent_id).__send__("create_#{self.mongoid_name}",query)
 
           end
 
@@ -37,24 +38,30 @@ module Mongoid
 
       def __read__ *args
 
-        query   = Hash[*args.select{|e| e.class <= ::Hash }]
-        classes = args.select{|e| e.class <= ::Class }
+        query     = Hash[*args.select{|e| e.class <= ::Hash }]
+        classes   = args.select{|e| e.class <= ::Class }
+        _id       = query.delete(:_id) || query.delete('_id')
 
         if self.embedded?
 
-          parent_id = query.delete(@@parent_sym)
-          _id       = query.delete('_id')
+          parent_id = query.delete(@@parent_sym) || query.delete(@@parent_sym.to_s)
 
           if !_id.nil?
             return self._find(_id)#.__send__(self.mongoid_name).create(query)
-          elsif !query[@@parent_sym].nil?
+          elsif !parent_id.nil?
             return self._get_class_path(*classes).pinch.last._find(parent_id).__send__(self.mongoid_name).where(query)
           else
             return self._where(query)
           end
 
         else
-          return self.where(query)
+
+          if !_id.nil?
+            return self.find(_id)
+          else
+            return self.where(query)
+          end
+
         end
 
       end
