@@ -8,6 +8,7 @@ class TestA
   store_in :collection => self.mongoid_name
 
   embeds_many :TestB.mongoid_name
+  embeds_one  :TestC.mongoid_name
 
 end
 
@@ -15,11 +16,10 @@ class TestB
 
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::CRUD       #> but you should use extend for right use!
+  include Mongoid::CRUD
 
   embedded_in :TestA.mongoid_name
   embeds_many :TestC.mongoid_name
-
 
 end
 
@@ -27,27 +27,8 @@ class TestC
 
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::CRUD
 
-  embedded_in :TestB.mongoid_name
-  embeds_many :TestD.mongoid_name
-
-  field :test,
-        :type         => String,
-        :presence     => true,
-        :desc         => "description for this field"
-
-end
-
-class TestD
-
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
-  embedded_in :TestC.mongoid_name
-
-  field :test,
-        :type         => String,
-        :presence     => true,
-        :desc         => "description for this field"
+  embedded_in :TestA.mongoid_name
 
 end
