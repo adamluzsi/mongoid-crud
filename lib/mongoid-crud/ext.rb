@@ -72,6 +72,8 @@ module Mongoid
         query   = Hash[*args.select{|e| e.class <= ::Hash }]
         classes = args.select{|e| e.class <= ::Class }
 
+        [@@parent_sym,@@parent_sym.to_s].each{|e| query.delete(e) unless query[e].nil? }
+
         raise(ArgumentError,"to #{__method__} document, you need :_id") if query[:_id].nil?
         var= self._find(query.delete(:_id))
         query.each{|k,v| var[k]= v }
