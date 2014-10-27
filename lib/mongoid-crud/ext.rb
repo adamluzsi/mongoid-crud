@@ -49,7 +49,13 @@ module Mongoid
           if !_id.nil?
             return self._find(_id)#.__send__(self.mongoid_name).create(query)
           elsif !parent_id.nil?
-            return self._get_class_path(*classes).pinch.last._find(parent_id).__send__(self.mongoid_name).where(query)
+            var = self._get_class_path(*classes).pinch.last._find(parent_id).__send__(self.mongoid_name)
+            if Mongoid.models.include? var.class
+              return var
+            else
+              return var.where(query)
+            end
+
           else
             return self._where(query)
           end
